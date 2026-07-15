@@ -39,6 +39,19 @@ class Post(models.Model):
         unique=True
     )
 
+    thumbnail = models.ImageField(
+        upload_to="thumbnails/",
+        blank=True,
+        null=True
+    )
+
+    featured_image = models.ImageField(
+        upload_to="featured_images/",
+        blank=True,
+        null=True
+    )
+
+
     text = models.TextField()
 
     created_date = models.DateTimeField(
