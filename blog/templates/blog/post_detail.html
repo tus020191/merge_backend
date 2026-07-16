@@ -18,6 +18,14 @@
 
         
         <h2>{{ post.title }}</h2>
+
+        <div class="mb-3">
+
+            <small class="text-muted">
+                Category: {{ post.category.name }}
+            </small>
+
+        </div>
         
         {% if post.featured_image %}
 

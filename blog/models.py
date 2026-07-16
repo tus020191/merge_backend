@@ -23,7 +23,39 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django_extensions.db.fields import AutoSlugField
 
+#  it gives us our active user model here in settings we have
+#  mentioned our User model so it takes form there .
 User = get_user_model()
+
+class Tag(models.Model):
+
+    name = models.CharField(max_length=100)
+
+    slug = AutoSlugField(
+        populate_from="name",
+        unique=True
+    )
+
+    def __str__(self):
+        return self.name
+    
+
+
+
+
+
+class Category(models.Model):
+
+    name = models.CharField(max_length=100)
+
+    slug = AutoSlugField(
+        populate_from="name",
+        unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
 
 
 class Post(models.Model):
@@ -31,6 +63,17 @@ class Post(models.Model):
         User,
         on_delete=models.CASCADE
     )
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+
+        # without it django default category.objects.post_set.all()
+        #  now we can have category.objects.posts.all()
+        related_name="posts",
+        
+    )
+
 
     title = models.CharField(max_length=200)
 
@@ -54,6 +97,12 @@ class Post(models.Model):
 
     text = models.TextField()
 
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True,
+        related_name="posts"
+    )
+
     created_date = models.DateTimeField(
         auto_now_add=True
     )
@@ -69,4 +118,5 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
 
