@@ -2,58 +2,83 @@
 
 {% block content %}
 
-    {% if messages %}
+{% if messages %}
 
-        {% for message in messages %}
+    {% for message in messages %}
 
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-
-        {% endfor %}
-
-    {% endif %}
-    
-    {% for post in posts %}
-        <div class="post">
-
-            <div class="d-flex align-items-center mb-3">
-    
-                {% if post.thumbnail %}
-                    <img
-                        src="{{ post.thumbnail.url }}"
-                        width="70"
-                        height="70"
-                        class="rounded-circle me-3"
-                        style="object-fit:cover;">
-                {% endif %}
-    
-                <div>
-    
-                    <h2 class="mb-0">
-                        <a href="{% url 'post_detail' slug=post.slug %}">
-                            {{ post.title }}
-                        </a>
-                    </h2>
-    
-                    {% if post.published_date %}
-                        <small class="text-muted">
-                            {{ post.published_date }}
-                        </small>
-                    {% endif %}
-
-                    <div>
-                        <small class="text-muted">
-                            Category: {{ post.category.name }}
-                        </small>
-                    </div>
-    
-                </div>
-    
-            </div>
-            
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
         </div>
 
     {% endfor %}
+
+{% endif %}
+
+{% for post in posts %}
+
+    <div class="post">
+
+        <div class="d-flex align-items-center mb-3">
+
+            {% if post.thumbnail %}
+
+                <img
+                    src="{{ post.thumbnail.url }}"
+                    width="70"
+                    height="70"
+                    class="rounded-circle me-3"
+                    style="object-fit: cover;">
+
+            {% endif %}
+
+            <div>
+
+                <h2 class="mb-0">
+                    <a href="{% url 'post_detail' slug=post.slug %}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+
+                {% if post.published_date %}
+
+                    <small class="text-muted">
+                        {{ post.published_date }}
+                    </small>
+
+                {% endif %}
+
+                <div>
+
+                    <small class="text-muted">
+                        Category: {{ post.category.name }}
+                    </small>
+
+                </div>
+
+                <div class="mt-2">
+
+                    {% for tag in post.tags.all %}
+
+                        <span class="badge bg-secondary me-1">
+                            {{ tag.name }}
+                        </span>
+
+                    {% empty %}
+
+                        <small class="text-muted">
+                            No tags
+                        </small>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endfor %}
 
 {% endblock %}
