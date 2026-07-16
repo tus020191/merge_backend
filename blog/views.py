@@ -187,4 +187,7 @@ def edit_profile(request):
 
 def user_logout(request):
     logout(request)
+
+    messages.success(request, "logout  successfully!")
+
     return redirect("post_list")
