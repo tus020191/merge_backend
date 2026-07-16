@@ -18,6 +18,8 @@ def post_list(request):
         "posts" : posts
     }
 
+    print( type( (Post.objects.get(id = 1) ).tags.all() )  )
+
     return render(request, 'blog/post_list.html', contextDictionary)
 
 def post_detail(request, slug):
