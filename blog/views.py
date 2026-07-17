@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 #  user defiend modules
-from .models import Post , User
+from .models import Post , User , Category, Tag
 from .forms import PostForm
 
 def post_list(request):
@@ -18,13 +18,34 @@ def post_list(request):
         "posts" : posts
     }
 
-    print( type( (Post.objects.get(id = 1) ).tags.all() )  )
 
     return render(request, 'blog/post_list.html', contextDictionary)
 
+
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    return render(request, 'blog/post_detail.html', {'post': post})
+
+    post = get_object_or_404(
+        Post,
+        slug=slug
+    )
+
+    # this will be for right pannel to display all categories 
+    #  for filter purpose 
+    categories = Category.objects.all()
+
+    #  same as for categories  above 
+    tags = Tag.objects.all()
+
+    return render(
+        request,
+        'blog/post_detail.html',
+        {
+            'post': post,
+            'categories': categories,
+            'tags': tags,
+        }
+    )
+
 
 
 def post_new(request):
