@@ -7,6 +7,16 @@ urlpatterns = [
     path("post/new/", views.post_new, name="post_new"),
     path("post/<slug:slug>/", views.post_detail, name="post_detail"),
     path("post/<slug:slug>/edit/", views.post_edit, name="post_edit"),
+    path(
+        "category/<slug:slug>/",
+        views.category_posts,
+        name="category_posts"
+    ),
+    path(
+        "tag/<slug:slug>/",
+        views.tag_posts,
+        name="tag_posts"
+    ),
 
     # Authentication
     path("login/", views.user_login, name="login"),

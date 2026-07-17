@@ -22,6 +22,64 @@ def post_list(request):
     return render(request, 'blog/post_list.html', contextDictionary)
 
 
+def category_posts(request, slug):
+
+    category = get_object_or_404(
+        Category,
+        slug=slug
+    )
+
+    #  here instead of diaplaying all posts 
+    # we want only those posts who have category_id selected
+    # by user in pannel  and then we will display them using
+    #  our same post_list page just here we have taken only 
+    #  specified posts 
+
+    posts = Post.objects.filter(
+        category=category
+    )
+
+    contextDictionary = {
+        "posts": posts,
+        "selected_category": category,
+    }
+
+    return render(
+        request,
+        "blog/post_list.html",
+        contextDictionary
+    )
+
+
+def tag_posts(request, slug):
+
+    tag = get_object_or_404(
+        Tag,
+        slug=slug
+    )
+
+    #  here instead of diaplaying all posts 
+    # we want only those posts who have tag_id selected
+    # by user in pannel  and then we will display them using
+    #  our same post_list page just here we have taken only 
+    #  specified posts 
+    posts = Post.objects.filter(
+        tags=tag
+    )
+
+    contextDictionary = {
+        "posts": posts,
+        "selected_tag": tag,
+    }
+
+    return render(
+        request,
+        "blog/post_list.html",
+        contextDictionary
+    )
+
+
+
 def post_detail(request, slug):
 
     post = get_object_or_404(
