@@ -123,8 +123,8 @@
 
                         <li class="list-group-item">
 
-                            <a
-                                href="#"
+                             <a
+                                href="{% url 'category_posts' slug=category.slug %}"
                                 class="text-decoration-none">
 
                                 {{ category.name }}
@@ -147,13 +147,14 @@
 
                     {% for tag in tags %}
 
-                        <a
-                            href="#"
+                          <a
+                            href="{% url 'tag_posts' slug=tag.slug %}"
                             class="badge bg-secondary text-decoration-none me-1 mb-1">
 
                             {{ tag.name }}
 
                         </a>
+
 
                     {% endfor %}
 
