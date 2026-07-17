@@ -14,29 +14,33 @@
 
 {% endif %}
 
-{% for post in posts %}
+<div class="post">
+    
+    <div class="row g-4">
+    
+        {% for post in posts %}
+    
+            <div class="col-md-6 col-lg-4">
 
-    <div class="post">
+    <a
+        href="{% url 'post_detail' slug=post.slug %}"
+        class="text-decoration-none text-dark">
 
-        <div class="d-flex align-items-center mb-3">
+        <div class="card h-100 shadow-sm post-card">
 
-            {% if post.thumbnail %}
+            {% if post.featured_image %}
 
                 <img
-                    src="{{ post.thumbnail.url }}"
-                    width="70"
-                    height="70"
-                    class="rounded-circle me-3"
-                    style="object-fit: cover;">
+                    src="{{ post.featured_image.url }}"
+                    class="card-img-top"
+                    alt="{{ post.title }}">
 
             {% endif %}
 
-            <div>
+            <div class="card-body">
 
-                <h2 class="mb-0">
-                    <a href="{% url 'post_detail' slug=post.slug %}">
-                        {{ post.title }}
-                    </a>
+                <h2 class="card-title">
+                    {{ post.title }}
                 </h2>
 
                 {% if post.published_date %}
@@ -47,15 +51,15 @@
 
                 {% endif %}
 
-                <div>
+                <p class="mt-2 mb-2">
 
                     <small class="text-muted">
                         Category: {{ post.category.name }}
                     </small>
 
-                </div>
+                </p>
 
-                <div class="mt-2">
+                <div>
 
                     {% for tag in post.tags.all %}
 
@@ -77,8 +81,14 @@
 
         </div>
 
+    </a>
+
+</div>
+    
+        {% endfor %}
+    
     </div>
 
-{% endfor %}
+</div>
 
 {% endblock %}
