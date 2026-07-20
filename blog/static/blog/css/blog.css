@@ -43,12 +43,30 @@ h4 {
     text-decoration: none;
 }
 
-.post-card{
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 
+
+.post-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.post-card:hover{
-    transform: translateY(-5px);
-    
+.post-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+.post-card-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+
+.post-card-title {
+    min-height: 58px;
+}
+
+
+.post-card-description {
+    min-height: 75px;
 }
