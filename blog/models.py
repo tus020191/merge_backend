@@ -42,8 +42,6 @@ class Tag(models.Model):
 
 
 
-
-
 class Category(models.Model):
 
     name = models.CharField(max_length=100)
@@ -68,8 +66,8 @@ class Post(models.Model):
         Category,
         on_delete=models.CASCADE,
 
-        # without it django default category.objects.post_set.all()
-        #  now we can have category.objects.posts.all()
+        # without it django default category_objects.post_set.all()
+        #  now we can have category_objects.posts.all()
         related_name="posts",
         
     )
@@ -118,5 +116,41 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class Comment(models.Model):
+
+    # ab apn isme Post model ke obj se us particular post obj
+    #  ke sare comments find kar sakthe hai 
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+
+    text = models.TextField()
+
+    created_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="replies"
+    )
+
+    def __str__(self):
+
+        return f"{self.author.username} - {self.post.title}"
 
 

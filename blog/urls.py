@@ -18,6 +18,18 @@ urlpatterns = [
         name="tag_posts"
     ),
 
+    path(
+        "post/<slug:slug>/comment/",
+        views.add_comment,
+        name="add_comment"
+    ),
+    
+    path(
+        "post/<slug:slug>/comment/<int:comment_id>/reply/",
+        views.add_reply,
+        name="add_reply"
+    ),
+
     # Authentication
     path("login/", views.user_login, name="login"),
     path("signup/", views.signup, name="signup"),

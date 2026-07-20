@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 #  user defiend modules
-from .models import Post , User , Category, Tag
-from .forms import PostForm
+from .models import Post , User , Category, Tag , Comment
+from .forms import PostForm ,CommentForm
 
 def post_list(request):
 
@@ -79,7 +79,7 @@ def tag_posts(request, slug):
     )
 
 
-
+@login_required
 def post_detail(request, slug):
 
     post = get_object_or_404(
@@ -94,6 +94,11 @@ def post_detail(request, slug):
     #  same as for categories  above 
     tags = Tag.objects.all()
 
+    comments = post.comments.filter(
+        parent__isnull=True).order_by( "-created_date")
+
+    comment_form = CommentForm()
+
     return render(
         request,
         'blog/post_detail.html',
@@ -101,11 +106,13 @@ def post_detail(request, slug):
             'post': post,
             'categories': categories,
             'tags': tags,
+            "comments" : comments,
+            "comment_form": comment_form,
         }
     )
 
 
-
+@login_required
 def post_new(request):
     if request.method == "POST":
 
@@ -127,6 +134,7 @@ def post_new(request):
 
     return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required
 def post_edit(request, slug):
     post = get_object_or_404(Post, slug=slug)
 
@@ -150,6 +158,87 @@ def post_edit(request, slug):
 
     return render(request, 'blog/post_edit.html', {'form': form})
 
+
+@login_required
+def add_comment(request, slug):
+
+    post = get_object_or_404(
+        Post,
+        slug=slug
+    )
+
+    if request.method == "POST":
+
+        form = CommentForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            comment = form.save(
+                commit=False
+            )
+
+            comment.post = post
+
+            comment.author = request.user
+
+            comment.save()
+
+            return redirect(
+                "post_detail",
+                slug=post.slug
+            )
+
+    return redirect(
+        "post_detail",
+        slug=post.slug
+    )
+
+
+@login_required
+def add_reply(request, slug, comment_id):
+
+    if request.method == "POST":
+
+        post = get_object_or_404(
+            Post,
+            slug=slug
+        )
+
+        parent_comment = get_object_or_404(
+            Comment,
+            id=comment_id,
+            post=post
+        )
+
+        form = CommentForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            reply = form.save(
+                commit=False
+            )
+
+            reply.post = post
+
+            reply.author = request.user
+
+            reply.parent = parent_comment
+
+            reply.save()
+
+            return redirect(
+                "post_detail",
+                slug=post.slug
+            )
+
+    return redirect(
+        "post_detail",
+        slug=slug
+    )
 
 def user_login(request):
 
