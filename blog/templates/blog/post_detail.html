@@ -100,6 +100,52 @@
 
             </div>
 
+            {% if "" %}
+            <div class="mt-4">
+
+                <button
+                    id="like-btn"
+                    class="btn btn-outline-primary">
+
+                    👍 Like
+
+                </button>
+
+                <span
+                    id="like-count"
+                    class="ms-2">
+
+                    {{ post.likes.count }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+        
+            <!-- like counter  -->
+            <div class="mt-4">
+
+                <button
+                    id="counter-btn"
+                    class="btn btn-success">
+
+                    Increase Like_Counter
+
+                </button>
+
+                <span
+                    id="counter-value"
+                    class="ms-2">
+
+                    {{ post.like_counter }}
+
+                </span>
+
+            </div>
+
+
         </div>
 
         
@@ -305,5 +351,88 @@
     </div>
 
 </div>
+
+<!-- 
+<script>
+
+const likeButton = document.getElementById("like-btn");
+
+const likeCount = document.getElementById("like-count");
+
+likeButton.addEventListener("click", function () {
+
+    console.log("Button Clicked");
+
+    fetch("{% url 'toggle_like' slug=post.slug %}", {
+
+        method: "POST",
+
+        headers: {
+
+            "X-CSRFToken": "{{ csrf_token }}"
+
+        }
+
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        console.log(data);
+
+        //  update the like counter 
+        likeCount.innerText = data.likes_count;
+
+    });
+
+});
+
+</script> -->
+
+<script>
+
+const counterButton = document.getElementById("counter-btn");
+
+const counterValue = document.getElementById("counter-value");
+
+counterButton.addEventListener(
+    "click",
+    increaseCounter
+);
+
+async function increaseCounter() {
+
+    console.log("Clicked");
+
+    try {
+
+        const response = await fetch(
+            "{% url 'increase_counter' slug=post.slug %}",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "X-CSRFToken": "{{ csrf_token }}"
+
+                }
+
+            });
+
+        const data = await response.json();
+
+        counterValue.innerText = data.counter;
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+</script>
 
 {% endblock %}

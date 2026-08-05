@@ -3,9 +3,10 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login , logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 #  user defiend modules
-from .models import Post , User , Category, Tag , Comment
+from .models import Post , User , Category, Tag , Comment , Like
 from .forms import PostForm ,CommentForm
 
 def post_list(request):
@@ -240,6 +241,37 @@ def add_reply(request, slug, comment_id):
         slug=slug
     )
 
+
+
+def increase_counter(request, slug):
+
+    if request.method == "POST":
+
+        post = get_object_or_404(
+            Post,
+            slug=slug
+        )
+
+        post.like_counter += 1
+
+        post.save()
+
+        return JsonResponse(
+            {
+                "counter": post.like_counter
+            }
+        )
+
+    return JsonResponse(
+        {
+            "error": "Invalid Request"
+        },
+        status=400
+    )
+
+
+
+
 def user_login(request):
 
     if request.method == "POST":
@@ -262,6 +294,7 @@ def user_login(request):
             messages.error(request, "Invalid Username or Password")
 
     return render(request, "blog/login.html")
+
 
 def signup(request):
 
@@ -320,6 +353,7 @@ def signup(request):
 
     return render(request, "blog/signup.html")
 
+
 @login_required
 def profile(request):
     # user = request.user
@@ -361,3 +395,63 @@ def user_logout(request):
     messages.success(request, "logout  successfully!")
 
     return redirect("post_list")
+
+
+
+
+@login_required
+def toggle_like(request, slug):
+
+    if request.method == "POST":
+
+        post = get_object_or_404(
+            Post,
+            slug=slug
+        )
+
+        #  here we want to find that specific like 
+        #  made by current user on the current post...
+        #  one user can like one post only once 
+
+        #  we do not used this -> Like.objects.get(...)
+        #  becoz it throws error if no found ...
+
+        #  also get_object_or_404 this cannot be used
+        #  becoz it throws 404 page but we dont want that 
+        like = Like.objects.filter(
+            post=post,
+            user=request.user
+        ).first()
+
+
+        #  if this user has already liked this post earlier
+        #  then dislike it 
+        if(like) :
+
+            like.delete() 
+            liked = False 
+
+
+        else : 
+
+            Like.objects.create(post= post, user = request.user)
+
+            liked = True 
+
+        #  count how many likes this post has ..
+        likes_count = post.likes.count()
+
+        return JsonResponse(
+            {
+                "liked": liked,
+                "likes_count": likes_count
+            }
+        ) 
+
+
+    return JsonResponse(
+        {
+            "error": "Invalid request"
+        },
+        status=400
+    )

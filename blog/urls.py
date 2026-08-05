@@ -4,9 +4,19 @@ from . import views
 urlpatterns = [
     # Blog
     path("", views.post_list, name="post_list"),
+
     path("post/new/", views.post_new, name="post_new"),
+
     path("post/<slug:slug>/", views.post_detail, name="post_detail"),
+
     path("post/<slug:slug>/edit/", views.post_edit, name="post_edit"),
+
+    path(
+    "post/<slug:slug>/counter/",
+    views.increase_counter,
+    name="increase_counter"
+    ),
+
     path(
         "category/<slug:slug>/",
         views.category_posts,
@@ -38,4 +48,11 @@ urlpatterns = [
     # Profile
     path("profile/", views.profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
+
+
+    path(
+        "post/<slug:slug>/like/",
+        views.toggle_like,
+        name="toggle_like"
+    ),
 ]

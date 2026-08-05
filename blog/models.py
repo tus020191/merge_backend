@@ -75,6 +75,11 @@ class Post(models.Model):
 
     title = models.CharField(max_length=200)
 
+    like_counter = models.PositiveIntegerField(
+        default=0, null=True, blank=True)
+
+    
+
     slug = AutoSlugField(
         populate_from="title",
         unique=True
@@ -154,3 +159,37 @@ class Comment(models.Model):
         return f"{self.author.username} - {self.post.title}"
 
 
+class Like(models.Model):
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="likes"
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="likes"
+    )
+
+    created_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+
+        #  this is to make sure each user can like 
+        #  a particular post only once ...
+        constraints = [
+
+            models.UniqueConstraint(
+                fields=["post", "user"],
+                name="unique_post_like"
+            )
+
+        ]
+
+    def __str__(self):
+
+        return f"{self.user.username} likes {self.post.title}"
