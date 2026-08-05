@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Post
 from django.contrib.auth.admin import UserAdmin
-from .models import User , Category , Tag , Comment
+from .models import User , Category , Tag , Comment , Like
 
 admin.site.register(Post)
 
@@ -12,6 +12,8 @@ admin.site.register(Tag)
 
 admin.site.register(Comment)
 
+
+admin.site.register(Like)
 
 
 @admin.register(User)
