@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_extensions',
     "polls",
     "blog" ,
+    "rest_framework",
+    "rest_framework.authtoken",
     "api",
 ]
 
@@ -127,3 +129,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 LOGIN_URL = "login"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
