@@ -29,7 +29,7 @@ User = get_user_model()
 
 class Tag(models.Model):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     slug = AutoSlugField(
         populate_from="name",
@@ -44,7 +44,7 @@ class Tag(models.Model):
 
 class Category(models.Model):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     slug = AutoSlugField(
         populate_from="name",
